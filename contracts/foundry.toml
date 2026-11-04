@@ -1,0 +1,47 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib"]
+allow_paths = ["../node_modules"]
+solc_version = "0.8.26"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+
+remappings = [
+  "@openzeppelin/=../node_modules/@openzeppelin/",
+  "erc721a/=../node_modules/erc721a/",
+  "forge-std/=lib/forge-std/src/",
+]
+
+# Elysium runs stock ArbOS, so deployed bytecode must not rely on Cancun
+# opcodes. The nft and claim profiles compile with "paris" to remove PUSH0,
+# MCOPY, TSTORE and TLOAD from the output.
+#
+# Usage:
+#   FOUNDRY_PROFILE=nft forge build
+#   FOUNDRY_PROFILE=claim forge build
+#   FOUNDRY_PROFILE=claim forge script script/Deploy.s.sol ...
+[profile.nft]
+evm_version = "paris"
+out = "out-nft"
+cache_path = "cache-nft"
+skip = ["src/ElyziumaClaim.sol", "test/ElyziumaClaim.t.sol", "script/Deploy.s.sol"]
+
+# Claim contracts use Ownable, Pausable, ReentrancyGuard and SafeERC20 only.
+# They compile cleanly for Paris, which is what Elysium needs.
+[profile.claim]
+evm_version = "paris"
+out = "out-claim"
+cache_path = "cache-claim"
+skip = ["test/ElyziumaNFT.t.sol", "script/DeployNFT.s.sol"]
+
+[fuzz]
+runs = 256
+
+[fmt]
+line_length = 100
+tab_width = 4
+bracket_spacing = false
