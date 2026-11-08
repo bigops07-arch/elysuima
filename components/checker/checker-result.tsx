@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import {
-  ArrowRight,
   ArrowUpRight,
   Check,
   Clock3,
@@ -167,15 +165,7 @@ export function EligibilityResult({
 
         <div className="relative mt-4 flex flex-wrap items-center gap-2.5 border-t border-paper/[0.08] pt-4">
           {showActions ? (
-            eligible ? (
-              <Link
-                href="/launchpad"
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-brand/25 bg-brand/[0.06] px-4 text-sm font-semibold text-brand transition hover:bg-brand/10"
-              >
-                Open launchpad
-                <ArrowRight className="size-3.5" />
-              </Link>
-            ) : (
+            eligible ? null : (
               <a
                 href={LINKS.x}
                 target="_blank"
