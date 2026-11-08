@@ -1,104 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import {
   AlertTriangle,
-  ArrowRight,
-  ArrowUpRight,
-  Check,
   ChevronDown,
-  Clock3,
   Loader2,
-  Minus,
   RefreshCw,
-  Search,
+  ScanSearch,
   ShieldCheck,
-  Sparkles,
   Wallet,
-  type LucideIcon,
 } from "lucide-react";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import type { Address } from "viem";
 import { useMintEligibility } from "@/hooks/use-mint-eligibility";
-import { LINKS } from "@/lib/config";
-import { formatRelative, shortAddress } from "@/lib/format";
-import type {
-  MintEligibilityResponse,
-  MintEligibilityTier,
-} from "@/lib/mint-eligibility";
+import { shortAddress } from "@/lib/format";
+import type { MintEligibilityTier } from "@/lib/mint-eligibility";
 import { cn } from "@/lib/utils";
-
-const RESULT_COPY: Record<
-  MintEligibilityTier,
-  {
-    label: string;
-    heading: string;
-    body: string;
-    stamp: string;
-    icon: LucideIcon;
-  }
-> = {
-  gtd: {
-    label: "Eligible",
-    heading: "GTD Phase Access",
-    body: "Congratulations! Your wallet is eligible for the Guaranteed Mint phase.",
-    stamp: "GTD",
-    icon: Sparkles,
-  },
-  fcfs: {
-    label: "Eligible",
-    heading: "FCFS Phase Access",
-    body: "Congratulations! Your wallet is eligible for the First Come, First Served phase.",
-    stamp: "FCFS",
-    icon: Sparkles,
-  },
-  both: {
-    label: "Eligible",
-    heading: "Full Mint Access",
-    body: "Congratulations! Your wallet is eligible for both GTD and FCFS phases.",
-    stamp: "GTD + FCFS",
-    icon: Sparkles,
-  },
-  none: {
-    label: "Not eligible",
-    heading: "No Allocation Found",
-    body: "This wallet is not eligible for the current Elyziuma mint phases",
-    stamp: "—",
-    icon: Search,
-  },
-};
-
-const TONE: Record<
-  MintEligibilityTier,
-  { card: string; glow: string; badge: string; stamp: string }
-> = {
-  gtd: {
-    card: "border-mint/25 bg-mint/[0.045]",
-    glow: "bg-mint/15",
-    badge: "border-mint/25 bg-mint/[0.08] text-mint",
-    stamp: "border-mint/35 bg-mint/[0.08] text-mint",
-  },
-  fcfs: {
-    card: "border-brand/25 bg-brand/[0.045]",
-    glow: "bg-brand/15",
-    badge: "border-brand/25 bg-brand/[0.08] text-brand",
-    stamp: "border-brand/35 bg-brand/[0.08] text-brand",
-  },
-  both: {
-    card: "border-mint/25 bg-gradient-to-br from-mint/[0.06] to-brand/[0.06]",
-    glow: "bg-brand/15",
-    badge: "border-mint/25 bg-mint/[0.08] text-mint",
-    stamp: "border-brand/35 bg-brand/[0.08] text-brand",
-  },
-  none: {
-    card: "border-paper/[0.09] bg-paper/[0.025]",
-    glow: "bg-paper/5",
-    badge: "border-paper/10 bg-paper/[0.04] text-paper-dim",
-    stamp: "border-paper/10 bg-paper/[0.03] text-paper-mute",
-  },
-};
+import { CheckerAddressLookup } from "./checker-lookup";
+import { EligibilityResult } from "./checker-result";
 
 const PHASE_PREVIEW: {
   key: MintEligibilityTier;
@@ -153,10 +73,14 @@ export function CheckerPanel() {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
-  const query = useMintEligibility(isConnected ? address : undefined);
+  const query = useMintEligibility(
+    isConnected ? address : undefined,
+    isConnected ? address : undefined,
+  );
 
   const connected = mounted && isConnected && Boolean(address);
   const retry = () => void query.refetch();
+  const [mode, setMode] = useState<"wallet" | "address">("wallet");
 
   return (
     <section
@@ -191,81 +115,137 @@ export function CheckerPanel() {
         )}
       </header>
 
-      <div className="flex flex-1 flex-col justify-center py-6">
-        {!mounted ? (
-          <PanelSkeleton />
-        ) : !connected || !address ? (
-          <DisconnectedState />
-        ) : query.isPending ? (
-          <CheckingState address={address} />
-        ) : query.isError ? (
-          <ErrorState message={query.error?.message} />
-        ) : query.data ? (
-          <ResultState data={query.data} />
-        ) : (
-          <PanelSkeleton />
-        )}
+      <div
+        role="group"
+        aria-label="Checker mode"
+        className="mt-4 grid grid-cols-2 gap-1 rounded-full border border-paper/10 bg-ink/40 p-1"
+      >
+        <button
+          type="button"
+          id="checker-tab-wallet"
+          aria-controls="checker-panel-wallet"
+          aria-pressed={mode === "wallet"}
+          onClick={() => setMode("wallet")}
+          className={cn(
+            "inline-flex h-10 items-center justify-center gap-1.5 rounded-full text-[13px] font-semibold transition",
+            mode === "wallet"
+              ? "bg-brand/15 text-brand"
+              : "text-paper-mute hover:text-paper",
+          )}
+        >
+          <Wallet className="size-4" />
+          My wallet
+        </button>
+        <button
+          type="button"
+          id="checker-tab-address"
+          aria-controls="checker-panel-address"
+          aria-pressed={mode === "address"}
+          onClick={() => setMode("address")}
+          className={cn(
+            "inline-flex h-10 items-center justify-center gap-1.5 rounded-full text-[13px] font-semibold transition",
+            mode === "address"
+              ? "bg-brand/15 text-brand"
+              : "text-paper-mute hover:text-paper",
+          )}
+        >
+          <ScanSearch className="size-4" />
+          Any address
+        </button>
       </div>
 
-      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/[0.07] pt-4">
-        {!mounted ? (
-          <button
-            type="button"
-            disabled
-            className="btn-primary w-full px-5 text-sm sm:w-auto"
-          >
-            <Wallet className="size-4" />
-            Connect wallet
-          </button>
-        ) : !connected ? (
-          <button
-            type="button"
-            onClick={openConnectModal}
-            disabled={!openConnectModal}
-            className="btn-primary w-full px-5 text-sm sm:w-auto"
-          >
-            <Wallet className="size-4" />
-            Connect wallet
-          </button>
-        ) : query.isPending ? (
-          <button
-            type="button"
-            disabled
-            className="btn-primary w-full px-5 text-sm sm:w-auto"
-          >
-            <Loader2 className="size-4 animate-spin" />
-            Checking…
-          </button>
-        ) : query.isError ? (
-          <button
-            type="button"
-            onClick={retry}
-            disabled={query.isFetching}
-            className="btn-primary w-full px-5 text-sm sm:w-auto"
-          >
-            <RefreshCw
-              className={cn("size-4", query.isFetching && "animate-spin")}
-            />
-            {query.isFetching ? "Retrying…" : "Try again"}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={retry}
-            disabled={query.isFetching}
-            className="btn-primary w-full px-5 text-sm sm:w-auto"
-          >
-            <RefreshCw
-              className={cn("size-4", query.isFetching && "animate-spin")}
-            />
-            {query.isFetching ? "Checking…" : "Recheck"}
-          </button>
-        )}
+      <div className="flex flex-1 flex-col py-5">
+        <div
+          id="checker-panel-wallet"
+          className={cn(
+            "flex flex-1 flex-col justify-center",
+            mode !== "wallet" && "hidden",
+          )}
+        >
+          {!mounted ? (
+            <PanelSkeleton />
+          ) : !connected || !address ? (
+            <DisconnectedState />
+          ) : query.isPending ? (
+            <CheckingState address={address} />
+          ) : query.isError ? (
+            <ErrorState message={query.error?.message} />
+          ) : query.data ? (
+            <EligibilityResult data={query.data} />
+          ) : (
+            <PanelSkeleton />
+          )}
+        </div>
 
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper-mute">
-          No signature · No gas · Read-only
-        </p>
-      </footer>
+        <div
+          id="checker-panel-address"
+          className={cn(mode !== "address" && "hidden")}
+        >
+          <CheckerAddressLookup />
+        </div>
+      </div>
+
+      {mode === "wallet" ? (
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/[0.07] pt-4">
+          {!mounted ? (
+            <button
+              type="button"
+              disabled
+              className="btn-primary w-full px-5 text-sm sm:w-auto"
+            >
+              <Wallet className="size-4" />
+              Connect wallet
+            </button>
+          ) : !connected ? (
+            <button
+              type="button"
+              onClick={openConnectModal}
+              disabled={!openConnectModal}
+              className="btn-primary w-full px-5 text-sm sm:w-auto"
+            >
+              <Wallet className="size-4" />
+              Connect wallet
+            </button>
+          ) : query.isPending ? (
+            <button
+              type="button"
+              disabled
+              className="btn-primary w-full px-5 text-sm sm:w-auto"
+            >
+              <Loader2 className="size-4 animate-spin" />
+              Checking…
+            </button>
+          ) : query.isError ? (
+            <button
+              type="button"
+              onClick={retry}
+              disabled={query.isFetching}
+              className="btn-primary w-full px-5 text-sm sm:w-auto"
+            >
+              <RefreshCw
+                className={cn("size-4", query.isFetching && "animate-spin")}
+              />
+              {query.isFetching ? "Retrying…" : "Try again"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={retry}
+              disabled={query.isFetching}
+              className="btn-primary w-full px-5 text-sm sm:w-auto"
+            >
+              <RefreshCw
+                className={cn("size-4", query.isFetching && "animate-spin")}
+              />
+              {query.isFetching ? "Checking…" : "Recheck"}
+            </button>
+          )}
+
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper-mute">
+            No signature · No gas · Read-only
+          </p>
+        </footer>
+      ) : null}
     </section>
   );
 }
@@ -358,103 +338,6 @@ function ErrorState({ message }: { message?: string }) {
   );
 }
 
-function ResultState({ data }: { data: MintEligibilityResponse }) {
-  const copy = RESULT_COPY[data.tier];
-  const tone = TONE[data.tier];
-  const eligible = data.tier !== "none";
-  const Icon = copy.icon;
-
-  return (
-    <div key={data.tier} className="animate-rise">
-      <div
-        role="status"
-        aria-live="polite"
-        className={cn(
-          "relative overflow-hidden rounded-2xl border p-5 sm:p-6",
-          tone.card,
-        )}
-      >
-        <div
-          aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute -right-8 -top-12 size-40 rounded-full blur-[60px]",
-            tone.glow,
-          )}
-        />
-
-        <div className="relative flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <span
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em]",
-                tone.badge,
-              )}
-            >
-              <Icon aria-hidden="true" className="size-3" />
-              {copy.label}
-            </span>
-
-            <h3 className="mt-2.5 font-display text-[clamp(1.75rem,3.2vw,2.25rem)] font-extrabold leading-[1] tracking-[-0.04em] text-paper">
-              {copy.heading}
-            </h3>
-            <p className="mt-2 max-w-md text-[15px] leading-6 text-paper-dim">
-              {copy.body}
-            </p>
-          </div>
-
-          <span
-            aria-hidden="true"
-            className={cn(
-              "hidden shrink-0 rotate-[-4deg] rounded-lg border-2 px-3 py-2 font-display text-base font-extrabold uppercase leading-none tracking-[0.08em] sm:block",
-              tone.stamp,
-            )}
-          >
-            {copy.stamp}
-          </span>
-        </div>
-
-        <div className="relative mt-4 flex flex-wrap gap-2">
-          <PhaseChip label="GTD" active={data.gtd} />
-          <PhaseChip label="FCFS" active={data.fcfs} />
-        </div>
-
-        {data.tier === "none" ? (
-          <p className="relative mt-3 rounded-xl border border-beak/20 bg-beak/[0.05] px-3 py-2 text-[13px] leading-6 text-paper-dim">
-            Holding a Kalos Genesis NFT? You are automatically eligible for
-            FCFS — no wallet verification needed.
-          </p>
-        ) : null}
-
-        <div className="relative mt-4 flex flex-wrap items-center gap-2.5 border-t border-paper/[0.08] pt-4">
-          {eligible ? (
-            <Link
-              href="/launchpad"
-              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-brand/25 bg-brand/[0.06] px-4 text-sm font-semibold text-brand transition hover:bg-brand/10"
-            >
-              Open launchpad
-              <ArrowRight className="size-3.5" />
-            </Link>
-          ) : (
-            <a
-              href={LINKS.x}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] px-4 text-sm font-semibold text-paper-dim transition hover:border-brand/40 hover:text-brand"
-            >
-              Follow on X
-              <ArrowUpRight className="size-3.5" />
-            </a>
-          )}
-
-          <span className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-paper-mute">
-            <Clock3 className="size-3" />
-            {formatRelative(Math.floor(data.checkedAt / 1000))}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function PhaseGuide({ className }: { className?: string }) {
   return (
@@ -482,31 +365,6 @@ function PhaseGuide({ className }: { className?: string }) {
   );
 }
 
-function PhaseChip({ label, active }: { label: string; active: boolean }) {
-  const activeClass =
-    label === "FCFS"
-      ? "border-brand/25 bg-brand/[0.07] text-brand"
-      : "border-mint/25 bg-mint/[0.07] text-mint";
-
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em]",
-        active
-          ? activeClass
-          : "border-paper/[0.08] bg-paper/[0.02] text-paper-mute",
-      )}
-    >
-      {active ? (
-        <Check aria-hidden="true" className="size-3" />
-      ) : (
-        <Minus aria-hidden="true" className="size-3" />
-      )}
-      {label}
-      <span className="sr-only">{active ? "eligible" : "not eligible"}</span>
-    </span>
-  );
-}
 
 function PanelSkeleton() {
   return (

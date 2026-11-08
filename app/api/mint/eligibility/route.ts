@@ -29,6 +29,14 @@ export async function POST(request: Request) {
       ? (body as { address?: unknown }).address
       : undefined;
 
+  // The checker page is gated to authorized wallets. When it looks up another
+  // address, it sends the connected wallet as `requester`, so arbitrary
+  // lookups are allowed only for visitors who are already inside the gate.
+  const requester =
+    typeof body === "object" && body !== null && "requester" in body
+      ? (body as { requester?: unknown }).requester
+      : undefined;
+
   if (
     typeof address !== "string" ||
     !isAddress(address, { strict: false })
@@ -59,7 +67,10 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!isCheckerAddress(address)) {
+  const requesterAddress =
+    typeof requester === "string" ? requester : undefined;
+
+  if (!isCheckerAddress(address) && !isCheckerAddress(requesterAddress)) {
     return NextResponse.json(
       {
         error: "NOT_AUTHORIZED",

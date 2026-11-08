@@ -4,15 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import type { Address } from "viem";
 import type { MintEligibilityResponse } from "@/lib/mint-eligibility";
 
-export function useMintEligibility(address?: Address) {
+export function useMintEligibility(address?: Address, requester?: Address) {
   return useQuery<MintEligibilityResponse>({
-    queryKey: ["mint-eligibility", address?.toLowerCase()],
+    queryKey: [
+      "mint-eligibility",
+      address?.toLowerCase(),
+      requester?.toLowerCase(),
+    ],
     enabled: Boolean(address),
     queryFn: async () => {
       const response = await fetch("/api/mint/eligibility", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ address }),
+        body: JSON.stringify({ address, requester }),
         cache: "no-store",
       });
 

@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Flame, Sparkles } from "lucide-react";
+import { Flame, Sparkles } from "lucide-react";
 import { CheckerPanel } from "./checker-panel";
 
 export function CheckerContent() {
@@ -76,7 +75,7 @@ export function CheckerContent() {
                   Kalos Genesis Holders
                 </h2>
               </div>
-              <p className="mt-3 text-sm leading-6 text-paper-dim">
+              <p className="mt-3 text-pretty text-sm leading-6 text-paper-dim">
                 All Kalos Genesis holders are automatically eligible for the
                 FCFS phase. No wallet verification is required.
               </p>
@@ -96,17 +95,10 @@ export function CheckerContent() {
                   Your Journey Doesn&apos;t End Here.
                 </h2>
               </div>
-              <p className="mt-3 text-sm leading-6 text-paper-dim">
+              <p className="mt-3 text-pretty text-sm leading-6 text-paper-dim">
                 Mint your Elyziuma NFT and keep holding. There may be more
                 waiting for you beyond the mint. 👀
               </p>
-              <Link
-                href="/launchpad"
-                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] text-sm font-semibold text-paper transition hover:border-brand/40 hover:bg-brand/[0.08]"
-              >
-                Open the launchpad
-                <ArrowRight className="size-3.5" />
-              </Link>
             </section>
           </aside>
         </div>
