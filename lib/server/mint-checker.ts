@@ -9,7 +9,7 @@ import type {
  * Override it in the environment if the deployment URL changes.
  */
 const DEFAULT_API_URL =
-  "https://script.google.com/macros/s/AKfycbykyRMWzoVQM8HScOK1x9ZxFUwWUqxWOy61P1X51gpe3AnkaOYzxanxNbJ6BJMpB6C2zQ/exec";
+  "https://script.google.com/macros/s/AKfycbxYx586-_t5hh_1XZoVjQWdW1b9lQNI6idlsF3L-wvt4tuw5wIMMOkF3bkSUbKs7zE/exec";
 
 const API_URL = process.env.MINT_CHECKER_API_URL?.trim() || DEFAULT_API_URL;
 const API_KEY = process.env.MINT_CHECKER_API_KEY?.trim() ?? "";
@@ -48,7 +48,11 @@ function parseResponse(
   if (!payload || typeof payload !== "object") return null;
 
   const record = payload as Record<string, unknown>;
-  if (record.ok !== true) return null;
+
+  // The original deployment returns `{ ok: true, ... }`. The newer
+  // deployment omits `ok` on success, so accept both shapes while still
+  // rejecting an explicit failure.
+  if (record.ok !== undefined && record.ok !== true) return null;
 
   let gtd = typeof record.gtd === "boolean" ? record.gtd : null;
   let fcfs = typeof record.fcfs === "boolean" ? record.fcfs : null;
@@ -135,15 +139,19 @@ async function runCheck(address: Address): Promise<MintEligibilityResponse> {
     try {
       const payload = await fetchFromAppsScript(address);
       const record = payload as { ok?: unknown; error?: unknown } | null;
+      const errorCode =
+        record && typeof record.error === "string"
+          ? record.error.toLowerCase()
+          : "";
 
-      if (record && record.ok === false) {
-        const code = typeof record.error === "string" ? record.error : "";
-
-        if (code === "invalid_address") {
+      // Older deployments send `ok: false`; the newer one only sends
+      // `error`. Treat either as a failure.
+      if (record && (record.ok === false || errorCode)) {
+        if (errorCode === "invalid_address") {
           throw new MintCheckerAddressError("Enter a valid EVM address.");
         }
 
-        if (code === "forbidden") {
+        if (errorCode === "forbidden" || errorCode === "unauthorized") {
           throw new MintCheckerUnavailableError(
             "The allowlist service rejected the request.",
           );

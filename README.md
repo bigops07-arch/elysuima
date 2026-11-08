@@ -200,7 +200,7 @@ and return:
 { "ok": true, "address": "0x...", "gtd": true, "fcfs": false, "tier": "gtd" }
 ```
 
-`tier` is one of `gtd`, `fcfs`, `both`, or `none`. The endpoint can take a few seconds on a cold start; the browser shows a checking state and the route allows up to 60 seconds. The Apps Script deployment must use **Execute as: Me** and **Who has access: Anyone**. If the endpoint requires a shared secret, set `MINT_CHECKER_API_KEY`; the server appends it as `key`.
+The route also accepts the older shape without `ok` on success (`{ "address": "0x...", "gtd": true, "fcfs": false, "tier": "gtd" }`), but `ok: true` is preferred. `tier` is one of `gtd`, `fcfs`, `both`, or `none`. The endpoint can take a few seconds on a cold start; the browser shows a checking state and the route allows up to 60 seconds. The Apps Script deployment must use **Execute as: Me** and **Who has access: Anyone**. If the endpoint requires a shared secret, set `MINT_CHECKER_API_KEY`; the server appends it as `key`.
 
 The Apps Script must read the correct tab for each list. If the GTD and FCFS tabs are renamed or reordered, update the script's tab names and deploy a new version. A wrong FCFS tab returns `fcfs: false` for every wallet, which the checker displays as not eligible.
 
