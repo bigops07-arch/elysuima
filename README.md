@@ -186,7 +186,7 @@ When `startAt` is set and still in the future, `/launchpad` stays fully visible 
 
 `/checker` checks the connected wallet against the GTD and FCFS allowlists. It is read-only: no signature, no gas, and it does not change the launchpad mint flow. GTD wallets see the Guaranteed Mint phase, FCFS wallets see the First Come, First Served phase, and wallets on both lists see Full Mint Access. Wallets on neither list see the not-eligible state, with a note that Kalos Genesis holders are automatically FCFS.
 
-The page is private. Only the wallet in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` (default `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`) can open it, and the same wallet unlocks the private `/raffles` page. The checker and raffles links in the header and footer are hidden unless that wallet is connected, both pages are `noindex`, and `POST /api/mint/eligibility` returns `403 NOT_AUTHORIZED` for every other address. This is an address-level gate, not a signed session; the allowed address is public in the browser bundle.
+The page is private. Only wallets in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` (a comma-separated list; defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`, `0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6`, and `0x2f4418dA7b2FB57866D61F735405A75499a1B4bF`) can open it, and the same allowlist unlocks the private `/raffles` page. The checker and raffles links in the header and footer are hidden unless one of those wallets is connected, both pages are `noindex`, and `POST /api/mint/eligibility` returns `403 NOT_AUTHORIZED` for every other address. This is an address-level gate, not a signed session; the allowed addresses are public in the browser bundle.
 
 The lists live in Google Sheets and are exposed through a Google Apps Script web app. The Next.js server calls the web app from `POST /api/mint/eligibility`, caches a wallet's result for 60 seconds, and rate-limits callers. The Apps Script needs to accept:
 
@@ -278,7 +278,7 @@ Both are npm-10 compatible: older npm versions ignore the fields and behave as b
 | `NEXT_PUBLIC_LAUNCHPAD_COLLECTION_ADDRESS` | Optional default NFT collection. The owner console manages the same collection |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud project ID; injected wallets work without it |
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata and OG images |
-| `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` | Wallet allowed into the private `/checker` and `/raffles` pages. Defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d` |
+| `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` | Comma-separated wallets allowed into the private `/checker` and `/raffles` pages. Defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`, `0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6`, and `0x2f4418dA7b2FB57866D61F735405A75499a1B4bF` |
 
 ### Server variables
 
@@ -425,7 +425,7 @@ Success response:
 }
 ```
 
-`tier` is `gtd`, `fcfs`, `both`, or `none`. The route calls the configured Google Apps Script web app, caches the result for 60 seconds, and rate-limits by IP. It only accepts the wallet in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS`; every other address receives `403 NOT_AUTHORIZED`. Other errors include `INVALID_BODY`, `INVALID_ADDRESS`, `RATE_LIMITED`, `CHECK_UNAVAILABLE`, and `CHECK_FAILED`.
+`tier` is `gtd`, `fcfs`, `both`, or `none`. The route calls the configured Google Apps Script web app, caches the result for 60 seconds, and rate-limits by IP. It only accepts wallets in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS`; every other address receives `403 NOT_AUTHORIZED`. Other errors include `INVALID_BODY`, `INVALID_ADDRESS`, `RATE_LIMITED`, `CHECK_UNAVAILABLE`, and `CHECK_FAILED`.
 
 ### `POST /api/claim/eligibility`
 
@@ -613,7 +613,7 @@ The public launchpad's display settings - collection address, mint method, max s
 - Short-lived claim-eligibility caching keyed by block number.
 - Launchpad admin signatures with a five-minute window and replay guard.
 - Mint checker: per-IP rate limit and a short per-wallet cache. It is informational and never gates the mint; the launchpad contract remains the final authority.
-- The checker is gated by the configured wallet address in both the UI and the API. The allowed address is public (it is inlined into the browser bundle); this is an address-level allowlist, not a signed session.
+- The checker is gated by the configured wallet addresses in both the UI and the API. The allowed addresses are public (they are inlined into the browser bundle); this is an address-level allowlist, not a signed session.
 - Owner-console sessions require a fresh owner-wallet signature, are stored in a 12-hour `HttpOnly` cookie, and are verified on the server before the console renders.
 - RPC chain ID and collection bytecode checks before saving settings.
 

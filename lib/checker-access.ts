@@ -1,20 +1,39 @@
 import { isAddress } from "viem";
 
 /**
- * The only wallet allowed into private pages (`/checker` and `/raffles`). This
- * is public information: it is inlined into the browser bundle so the pages,
+ * Wallets allowed into the private pages (`/checker` and `/raffles`). This is
+ * public information: it is inlined into the browser bundle so the pages,
  * header, and footer can hide them for every other wallet.
+ *
+ * `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` accepts a comma-separated list and, when
+ * set, replaces these defaults.
  */
-const DEFAULT_CHECKER_ACCESS_ADDRESS =
-  "0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d";
+const DEFAULT_CHECKER_ACCESS_ADDRESSES = [
+  "0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d",
+  "0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6",
+  "0x2f4418dA7b2FB57866D61F735405A75499a1B4bF",
+] as const;
 
-export const CHECKER_ACCESS_ADDRESS =
-  process.env.NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS?.trim() ||
-  DEFAULT_CHECKER_ACCESS_ADDRESS;
+function parseAccessAddresses(value?: string) {
+  const addresses = value
+    ?.split(",")
+    .map((address) => address.trim())
+    .filter(Boolean);
+
+  return addresses?.length ? addresses : DEFAULT_CHECKER_ACCESS_ADDRESSES;
+}
+
+export const CHECKER_ACCESS_ADDRESSES = parseAccessAddresses(
+  process.env.NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS,
+);
 
 export function isCheckerAddress(address?: string | null) {
   if (!address || !isAddress(address, { strict: false })) return false;
-  return address.toLowerCase() === CHECKER_ACCESS_ADDRESS.toLowerCase();
+
+  const normalized = address.toLowerCase();
+  return CHECKER_ACCESS_ADDRESSES.some(
+    (allowed) => allowed.toLowerCase() === normalized,
+  );
 }
 
 /** Shared allowlist for every private page. */

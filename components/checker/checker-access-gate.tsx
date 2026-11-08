@@ -8,8 +8,8 @@ export function CheckerAccessGate() {
     <WalletAccessGate
       eyebrow="Private checker"
       title="Authorized wallet only."
-      connectPrompt="Connect the authorized wallet to open the mint checker."
-      wrongWalletPrompt="This wallet doesn't have access to the checker. Switch to the authorized wallet to continue."
+      connectPrompt="Connect an authorized wallet to open the mint checker."
+      wrongWalletPrompt="This wallet doesn't have access to the checker. Switch to an authorized wallet to continue."
     >
       <CheckerContent />
     </WalletAccessGate>
