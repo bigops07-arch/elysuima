@@ -19,7 +19,7 @@ export function CheckerContent() {
 
         <div className="section-shell relative pb-8 pt-12 sm:pb-10 sm:pt-16">
           <div className="animate-rise mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
+            <div className="max-w-3xl">
               <div className="flex items-center gap-4">
                 <span className="relative size-14 shrink-0 overflow-hidden rounded-2xl border border-paper/10 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.8)]">
                   <Image
@@ -34,7 +34,7 @@ export function CheckerContent() {
                 <span className="eyebrow">Mint checker</span>
               </div>
 
-              <h1 className="mt-5 font-display text-[clamp(2.3rem,5.4vw,3.9rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-paper">
+              <h1 className="mt-5 font-display text-[clamp(2.3rem,5.4vw,3.9rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-paper sm:whitespace-nowrap">
                 Check your{" "}
                 <span className="text-gradient">mint access.</span>
               </h1>
