@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { RafflesContent } from "@/components/raffles/raffles-content";
+import { RafflesAccessGate } from "@/components/raffles/raffles-access-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -26,14 +26,18 @@ export const metadata: Metadata = {
     description:
       "One NFT, one winner. Enter the live Elyziuma raffle for 10 ELYZ.",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RafflesPage() {
   return (
     <div className="relative flex min-h-full flex-col">
       <SiteHeader />
-      <main className="flex-1">
-        <RafflesContent />
+      <main className="flex flex-1 flex-col justify-center">
+        <RafflesAccessGate />
       </main>
       <SiteFooter compact />
     </div>

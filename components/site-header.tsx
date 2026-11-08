@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useAccount } from "wagmi";
-import { isCheckerAddress } from "@/lib/checker-access";
+import { isAuthorizedAddress } from "@/lib/checker-access";
 import { cn } from "@/lib/utils";
 import { TokenMark } from "./token-mark";
 import { WalletButton } from "./wallet-button";
@@ -26,9 +26,12 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { address } = useAccount();
-  const navItems = isCheckerAddress(address)
+  const showPrivatePages = isAuthorizedAddress(address);
+  const navItems = showPrivatePages
     ? NAV
-    : NAV.filter((item) => item.href !== "/checker");
+    : NAV.filter(
+        (item) => item.href !== "/checker" && item.href !== "/raffles",
+      );
 
   return (
     <header className="sticky top-0 z-50 border-b border-paper/[0.07] bg-ink/70 backdrop-blur-xl">

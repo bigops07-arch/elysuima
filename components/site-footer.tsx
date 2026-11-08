@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useAccount } from "wagmi";
-import { isCheckerAddress } from "@/lib/checker-access";
+import { isAuthorizedAddress } from "@/lib/checker-access";
 import { LINKS } from "@/lib/config";
 import { TokenMark } from "./token-mark";
 
@@ -38,13 +38,17 @@ const COMPACT_LINKS = [
 
 export function SiteFooter({ compact = false }: { compact?: boolean }) {
   const { address } = useAccount();
-  const showChecker = isCheckerAddress(address);
-  const productLinks = showChecker
+  const showPrivatePages = isAuthorizedAddress(address);
+  const productLinks = showPrivatePages
     ? PRODUCT
-    : PRODUCT.filter((link) => link.href !== "/checker");
-  const compactLinks = showChecker
+    : PRODUCT.filter(
+        (link) => link.href !== "/checker" && link.href !== "/raffles",
+      );
+  const compactLinks = showPrivatePages
     ? COMPACT_LINKS
-    : COMPACT_LINKS.filter((link) => link.href !== "/checker");
+    : COMPACT_LINKS.filter(
+        (link) => link.href !== "/checker" && link.href !== "/raffles",
+      );
 
   if (compact) {
     return (

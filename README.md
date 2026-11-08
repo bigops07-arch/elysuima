@@ -186,7 +186,7 @@ When `startAt` is set and still in the future, `/launchpad` stays fully visible 
 
 `/checker` checks the connected wallet against the GTD and FCFS allowlists. It is read-only: no signature, no gas, and it does not change the launchpad mint flow. GTD wallets see the Guaranteed Mint phase, FCFS wallets see the First Come, First Served phase, and wallets on both lists see Full Mint Access. Wallets on neither list see the not-eligible state, with a note that Kalos Genesis holders are automatically FCFS.
 
-The page is private. Only the wallet in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` (default `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`) can open it. The checker links in the header and footer are hidden unless that wallet is connected, the page is `noindex`, and `POST /api/mint/eligibility` returns `403 NOT_AUTHORIZED` for every other address. This is an address-level gate, not a signed session; the allowed address is public in the browser bundle.
+The page is private. Only the wallet in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` (default `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`) can open it, and the same wallet unlocks the private `/raffles` page. The checker and raffles links in the header and footer are hidden unless that wallet is connected, both pages are `noindex`, and `POST /api/mint/eligibility` returns `403 NOT_AUTHORIZED` for every other address. This is an address-level gate, not a signed session; the allowed address is public in the browser bundle.
 
 The lists live in Google Sheets and are exposed through a Google Apps Script web app. The Next.js server calls the web app from `POST /api/mint/eligibility`, caches a wallet's result for 60 seconds, and rate-limits callers. The Apps Script needs to accept:
 
@@ -278,7 +278,7 @@ Both are npm-10 compatible: older npm versions ignore the fields and behave as b
 | `NEXT_PUBLIC_LAUNCHPAD_COLLECTION_ADDRESS` | Optional default NFT collection. The owner console manages the same collection |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud project ID; injected wallets work without it |
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata and OG images |
-| `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` | Wallet allowed into the private `/checker` page. Defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d` |
+| `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` | Wallet allowed into the private `/checker` and `/raffles` pages. Defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d` |
 
 ### Server variables
 
