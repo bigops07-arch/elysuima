@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 
 export default function CheckerPage() {
   return (
-    <div className="relative flex min-h-[100dvh] flex-col">
+    <div className="relative flex min-h-full flex-col">
       <SiteHeader />
-      <main className="flex flex-1 flex-col justify-center">
+      <main className="flex-1">
         <CheckerAccessGate />
       </main>
-      <SiteFooter compact />
+      <SiteFooter />
     </div>
   );
 }

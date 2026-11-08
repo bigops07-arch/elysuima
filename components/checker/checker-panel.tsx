@@ -161,20 +161,20 @@ export function CheckerPanel() {
   return (
     <section
       aria-labelledby="checker-heading"
-      className="glass card-sheen relative flex h-full flex-col overflow-hidden rounded-[24px] p-4"
+      className="glass card-sheen relative flex h-full flex-col overflow-hidden rounded-[28px] p-5 sm:p-6"
     >
-      <header className="flex items-center justify-between gap-3 border-b border-paper/[0.07] pb-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-brand/25 bg-brand/10 text-brand">
-            <ShieldCheck className="size-4" />
+      <header className="flex items-center justify-between gap-3 border-b border-paper/[0.07] pb-4">
+        <div className="flex items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-brand/25 bg-brand/10 text-brand">
+            <ShieldCheck className="size-5" />
           </span>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-brand">
               Wallet check
             </p>
             <h2
               id="checker-heading"
-              className="mt-0.5 text-lg font-semibold tracking-[-0.03em] text-paper"
+              className="mt-0.5 text-xl font-semibold tracking-[-0.03em] text-paper sm:text-2xl"
             >
               Your mint access
             </h2>
@@ -184,14 +184,14 @@ export function CheckerPanel() {
         {connected && address ? (
           <WalletChip address={address} onOpen={openAccountModal} />
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-paper-mute">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-paper-mute">
             <span className="size-1.5 rounded-full bg-paper-mute" />
             Not connected
           </span>
         )}
       </header>
 
-      <div className="flex flex-1 flex-col justify-center py-4">
+      <div className="flex flex-1 flex-col justify-center py-6">
         {!mounted ? (
           <PanelSkeleton />
         ) : !connected || !address ? (
@@ -207,12 +207,12 @@ export function CheckerPanel() {
         )}
       </div>
 
-      <footer className="flex flex-wrap items-center justify-between gap-2.5 border-t border-paper/[0.07] pt-3">
+      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/[0.07] pt-4">
         {!mounted ? (
           <button
             type="button"
             disabled
-            className="btn-primary w-full px-5 text-xs sm:w-auto"
+            className="btn-primary w-full px-5 text-sm sm:w-auto"
           >
             <Wallet className="size-4" />
             Connect wallet
@@ -222,7 +222,7 @@ export function CheckerPanel() {
             type="button"
             onClick={openConnectModal}
             disabled={!openConnectModal}
-            className="btn-primary w-full px-5 text-xs sm:w-auto"
+            className="btn-primary w-full px-5 text-sm sm:w-auto"
           >
             <Wallet className="size-4" />
             Connect wallet
@@ -231,7 +231,7 @@ export function CheckerPanel() {
           <button
             type="button"
             disabled
-            className="btn-primary w-full px-5 text-xs sm:w-auto"
+            className="btn-primary w-full px-5 text-sm sm:w-auto"
           >
             <Loader2 className="size-4 animate-spin" />
             Checking…
@@ -241,7 +241,7 @@ export function CheckerPanel() {
             type="button"
             onClick={retry}
             disabled={query.isFetching}
-            className="btn-primary w-full px-5 text-xs sm:w-auto"
+            className="btn-primary w-full px-5 text-sm sm:w-auto"
           >
             <RefreshCw
               className={cn("size-4", query.isFetching && "animate-spin")}
@@ -253,7 +253,7 @@ export function CheckerPanel() {
             type="button"
             onClick={retry}
             disabled={query.isFetching}
-            className="btn-primary w-full px-5 text-xs sm:w-auto"
+            className="btn-primary w-full px-5 text-sm sm:w-auto"
           >
             <RefreshCw
               className={cn("size-4", query.isFetching && "animate-spin")}
@@ -262,7 +262,7 @@ export function CheckerPanel() {
           </button>
         )}
 
-        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-paper-mute">
+        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper-mute">
           No signature · No gas · Read-only
         </p>
       </footer>
@@ -283,11 +283,11 @@ function WalletChip({
       onClick={onOpen}
       disabled={!onOpen}
       aria-label={`Connected wallet ${address}. Change wallet.`}
-      className="inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.04] px-2.5 py-1.5 font-mono text-[11px] text-paper-dim transition hover:border-brand/40 hover:text-paper disabled:cursor-default"
+      className="inline-flex items-center gap-2 rounded-full border border-paper/10 bg-paper/[0.04] px-3 py-1.5 font-mono text-xs text-paper-dim transition hover:border-brand/40 hover:text-paper disabled:cursor-default"
     >
       <span className="size-1.5 rounded-full bg-mint shadow-[0_0_8px_rgba(125,240,196,0.8)]" />
       {shortAddress(address, 4)}
-      <ChevronDown className="size-2.5 text-paper-mute" />
+      <ChevronDown className="size-3 text-paper-mute" />
     </button>
   );
 }
@@ -296,18 +296,18 @@ function DisconnectedState() {
   return (
     <div>
       <div className="flex items-center justify-between gap-2">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-mute">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-paper-mute">
           Possible results
         </p>
-        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-paper-mute">
-          <ShieldCheck className="size-2.5 text-brand" />
+        <span className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-paper-mute">
+          <ShieldCheck className="size-3 text-brand" />
           Read-only
         </span>
       </div>
 
-      <PhaseGuide className="mt-2" />
+      <PhaseGuide className="mt-3" />
 
-      <p className="mt-3 text-center text-[12px] leading-5 text-paper-mute">
+      <p className="mt-4 text-center text-sm leading-6 text-paper-mute">
         Connect a wallet to see which phase you qualify for.
       </p>
     </div>
@@ -317,14 +317,14 @@ function DisconnectedState() {
 function CheckingState({ address }: { address: Address }) {
   return (
     <div>
-      <div className="flex items-center justify-center gap-2 text-[13px] text-paper-dim">
-        <Loader2 className="size-3.5 animate-spin text-brand" />
+      <div className="flex items-center justify-center gap-2 text-[15px] text-paper-dim">
+        <Loader2 className="size-4 animate-spin text-brand" />
         Checking the GTD and FCFS lists…
       </div>
 
-      <PhaseGuide className="mt-3 opacity-60" />
+      <PhaseGuide className="mt-4 opacity-60" />
 
-      <p className="mt-3 text-center text-[11px] leading-5 text-paper-mute">
+      <p className="mt-4 text-center text-[13px] leading-6 text-paper-mute">
         Reading{" "}
         <span className="font-mono text-paper-dim">
           {shortAddress(address)}
@@ -345,15 +345,15 @@ function ErrorState({ message }: { message?: string }) {
     <div
       role="status"
       aria-live="polite"
-      className="rounded-xl border border-warn/25 bg-warn/[0.04] p-4 text-center"
+      className="rounded-2xl border border-warn/25 bg-warn/[0.04] p-5 text-center sm:p-6"
     >
-      <span className="mx-auto flex size-9 items-center justify-center rounded-lg border border-warn/30 bg-warn/10 text-warn">
-        <AlertTriangle className="size-4" />
+      <span className="mx-auto flex size-11 items-center justify-center rounded-xl border border-warn/30 bg-warn/10 text-warn">
+        <AlertTriangle className="size-5" />
       </span>
-      <h3 className="mt-2 text-base font-semibold text-paper">
+      <h3 className="mt-3 text-lg font-semibold text-paper">
         Couldn&apos;t check the lists
       </h3>
-      <p className="mt-1 text-[12px] leading-5 text-paper-mute">{friendly}</p>
+      <p className="mt-2 text-sm leading-6 text-paper-mute">{friendly}</p>
     </div>
   );
 }
@@ -370,7 +370,7 @@ function ResultState({ data }: { data: MintEligibilityResponse }) {
         role="status"
         aria-live="polite"
         className={cn(
-          "relative overflow-hidden rounded-xl border p-4",
+          "relative overflow-hidden rounded-2xl border p-5 sm:p-6",
           tone.card,
         )}
       >
@@ -382,22 +382,22 @@ function ResultState({ data }: { data: MintEligibilityResponse }) {
           )}
         />
 
-        <div className="relative flex items-start justify-between gap-3">
+        <div className="relative flex items-start justify-between gap-4">
           <div className="min-w-0">
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em]",
+                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em]",
                 tone.badge,
               )}
             >
-              <Icon aria-hidden="true" className="size-2.5" />
+              <Icon aria-hidden="true" className="size-3" />
               {copy.label}
             </span>
 
-            <h3 className="mt-2 font-display text-[clamp(1.5rem,3.2vw,2rem)] font-extrabold leading-[1] tracking-[-0.04em] text-paper">
+            <h3 className="mt-2.5 font-display text-[clamp(1.75rem,3.2vw,2.25rem)] font-extrabold leading-[1] tracking-[-0.04em] text-paper">
               {copy.heading}
             </h3>
-            <p className="mt-1.5 max-w-md text-[13px] leading-5 text-paper-dim">
+            <p className="mt-2 max-w-md text-[15px] leading-6 text-paper-dim">
               {copy.body}
             </p>
           </div>
@@ -405,7 +405,7 @@ function ResultState({ data }: { data: MintEligibilityResponse }) {
           <span
             aria-hidden="true"
             className={cn(
-              "hidden shrink-0 rotate-[-4deg] rounded-lg border-2 px-2.5 py-1.5 font-display text-[14px] font-extrabold uppercase leading-none tracking-[0.08em] sm:block",
+              "hidden shrink-0 rotate-[-4deg] rounded-lg border-2 px-3 py-2 font-display text-base font-extrabold uppercase leading-none tracking-[0.08em] sm:block",
               tone.stamp,
             )}
           >
@@ -413,41 +413,41 @@ function ResultState({ data }: { data: MintEligibilityResponse }) {
           </span>
         </div>
 
-        <div className="relative mt-3 flex flex-wrap gap-1.5">
+        <div className="relative mt-4 flex flex-wrap gap-2">
           <PhaseChip label="GTD" active={data.gtd} />
           <PhaseChip label="FCFS" active={data.fcfs} />
         </div>
 
         {data.tier === "none" ? (
-          <p className="relative mt-2.5 rounded-lg border border-beak/20 bg-beak/[0.05] px-2.5 py-1.5 text-[11px] leading-5 text-paper-dim">
+          <p className="relative mt-3 rounded-xl border border-beak/20 bg-beak/[0.05] px-3 py-2 text-[13px] leading-6 text-paper-dim">
             Holding a Kalos Genesis NFT? You are automatically eligible for
             FCFS — no wallet verification needed.
           </p>
         ) : null}
 
-        <div className="relative mt-3 flex flex-wrap items-center gap-2 border-t border-paper/[0.08] pt-3">
+        <div className="relative mt-4 flex flex-wrap items-center gap-2.5 border-t border-paper/[0.08] pt-4">
           {eligible ? (
             <Link
               href="/launchpad"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-brand/25 bg-brand/[0.06] px-3 text-[13px] font-semibold text-brand transition hover:bg-brand/10"
+              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-brand/25 bg-brand/[0.06] px-4 text-sm font-semibold text-brand transition hover:bg-brand/10"
             >
               Open launchpad
-              <ArrowRight className="size-3" />
+              <ArrowRight className="size-3.5" />
             </Link>
           ) : (
             <a
               href={LINKS.x}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] px-3 text-[13px] font-semibold text-paper-dim transition hover:border-brand/40 hover:text-brand"
+              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] px-4 text-sm font-semibold text-paper-dim transition hover:border-brand/40 hover:text-brand"
             >
               Follow on X
-              <ArrowUpRight className="size-3" />
+              <ArrowUpRight className="size-3.5" />
             </a>
           )}
 
-          <span className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-paper-mute">
-            <Clock3 className="size-2.5" />
+          <span className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-paper-mute">
+            <Clock3 className="size-3" />
             {formatRelative(Math.floor(data.checkedAt / 1000))}
           </span>
         </div>
@@ -458,22 +458,22 @@ function ResultState({ data }: { data: MintEligibilityResponse }) {
 
 function PhaseGuide({ className }: { className?: string }) {
   return (
-    <div className={cn("grid grid-cols-2 gap-1.5 sm:grid-cols-4", className)}>
+    <div className={cn("grid grid-cols-2 gap-2 sm:grid-cols-4", className)}>
       {PHASE_PREVIEW.map((phase) => (
         <div
           key={phase.key}
-          className={cn("rounded-lg border p-2", phase.tone)}
+          className={cn("rounded-xl border p-3", phase.tone)}
         >
           <div className="flex items-center justify-between gap-1">
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em]">
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em]">
               {phase.label}
             </span>
             <span className="size-1 rounded-full bg-current" />
           </div>
-          <p className="mt-1 text-[13px] font-semibold leading-4 text-paper">
+          <p className="mt-1.5 text-[15px] font-semibold leading-5 text-paper">
             {phase.title}
           </p>
-          <p className="mt-0.5 text-[11px] leading-4 text-paper-mute">
+          <p className="mt-1 text-[13px] leading-5 text-paper-mute">
             {phase.copy}
           </p>
         </div>
@@ -491,16 +491,16 @@ function PhaseChip({ label, active }: { label: string; active: boolean }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em]",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em]",
         active
           ? activeClass
           : "border-paper/[0.08] bg-paper/[0.02] text-paper-mute",
       )}
     >
       {active ? (
-        <Check aria-hidden="true" className="size-2.5" />
+        <Check aria-hidden="true" className="size-3" />
       ) : (
-        <Minus aria-hidden="true" className="size-2.5" />
+        <Minus aria-hidden="true" className="size-3" />
       )}
       {label}
       <span className="sr-only">{active ? "eligible" : "not eligible"}</span>
@@ -510,14 +510,14 @@ function PhaseChip({ label, active }: { label: string; active: boolean }) {
 
 function PanelSkeleton() {
   return (
-    <div className="animate-pulse space-y-2.5 py-2">
-      <div className="h-3 w-24 rounded-full bg-paper/[0.06]" />
-      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+    <div className="animate-pulse space-y-3 py-3">
+      <div className="h-3.5 w-28 rounded-full bg-paper/[0.06]" />
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[0, 1, 2, 3].map((item) => (
-          <div key={item} className="h-16 rounded-lg bg-paper/[0.04]" />
+          <div key={item} className="h-24 rounded-xl bg-paper/[0.04]" />
         ))}
       </div>
-      <div className="h-2.5 w-2/3 rounded-full bg-paper/[0.04]" />
+      <div className="h-3 w-2/3 rounded-full bg-paper/[0.04]" />
     </div>
   );
 }

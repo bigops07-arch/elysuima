@@ -11,96 +11,107 @@ export function CheckerContent() {
       <section className="relative overflow-hidden">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-48"
+          className="pointer-events-none absolute inset-0"
         >
-          <div className="absolute left-1/2 top-[-150px] size-[420px] -translate-x-1/2 rounded-full bg-brand/[0.12] blur-[100px]" />
-          <div className="absolute -left-24 top-0 size-[220px] rounded-full bg-beak/[0.05] blur-[90px]" />
+          <div className="animate-breathe absolute left-1/2 top-[-14%] size-[440px] -translate-x-1/2 rounded-full bg-brand/[0.15] blur-[120px]" />
+          <div className="absolute -left-32 top-1/3 size-[340px] rounded-full bg-beak/[0.07] blur-[120px]" />
         </div>
 
-        <div className="section-shell relative pb-4 pt-6 sm:pt-8">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex items-center gap-3">
-              <span className="relative size-12 shrink-0 overflow-hidden rounded-2xl border border-paper/10 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.8)]">
-                <Image
-                  src="/collection/elyziuma.jpg"
-                  alt=""
-                  fill
-                  priority
-                  sizes="48px"
-                  className="object-cover"
-                />
-              </span>
-
-              <div>
+        <div className="section-shell relative pb-8 pt-12 sm:pb-10 sm:pt-16">
+          <div className="animate-rise mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-4">
+                <span className="relative size-14 shrink-0 overflow-hidden rounded-2xl border border-paper/10 shadow-[0_12px_30px_-18px_rgba(0,0,0,0.8)]">
+                  <Image
+                    src="/collection/elyziuma.jpg"
+                    alt=""
+                    fill
+                    priority
+                    sizes="56px"
+                    className="object-cover"
+                  />
+                </span>
                 <span className="eyebrow">Mint checker</span>
-                <h1 className="mt-1.5 font-display text-[clamp(1.8rem,3.8vw,2.6rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-paper">
-                  Check your{" "}
-                  <span className="text-gradient">mint access.</span>
-                </h1>
               </div>
+
+              <h1 className="mt-5 font-display text-[clamp(2.3rem,5.4vw,3.9rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-paper">
+                Check your{" "}
+                <span className="text-gradient">mint access.</span>
+              </h1>
+
+              <p className="mt-4 max-w-xl text-[15px] leading-7 text-paper-dim">
+                Connect the wallet you plan to mint with. We read the GTD and
+                FCFS lists — no signature, no gas.
+              </p>
             </div>
 
-            <p className="max-w-sm text-[13px] leading-5 text-paper-dim sm:text-right">
-              Connect the wallet you plan to mint with. We read the GTD and FCFS
-              lists — no signature, no gas.
-            </p>
+            <div className="flex flex-wrap items-center gap-2.5 lg:justify-end">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-mint/20 bg-mint/[0.06] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-mint">
+                <span className="size-1.5 rounded-full bg-mint" />
+                GTD list
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand/[0.06] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-brand">
+                <span className="size-1.5 rounded-full bg-brand" />
+                FCFS list
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
       <section
-        className="section-shell relative pb-6"
+        className="section-shell relative pb-16 sm:pb-20"
         aria-label="Mint eligibility checker"
       >
-        <div className="mx-auto grid max-w-5xl items-stretch gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="mx-auto grid max-w-6xl items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-5">
           <CheckerPanel />
 
-          <aside className="glass flex flex-col rounded-[24px] p-4">
+          <aside className="glass flex flex-col justify-between rounded-[28px] p-5 sm:p-6">
             <section>
-              <div className="flex items-center gap-2">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-beak/30 bg-beak/10 text-beak">
-                  <Flame className="size-4" />
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-beak/30 bg-beak/10 text-beak">
+                  <Flame className="size-5" />
                 </span>
-                <h2 className="text-base font-semibold text-paper">
+                <h2 className="text-lg font-semibold tracking-[-0.02em] text-paper">
                   Kalos Genesis Holders
                 </h2>
               </div>
-              <p className="mt-2 text-[12px] leading-5 text-paper-dim">
+              <p className="mt-3 text-sm leading-6 text-paper-dim">
                 All Kalos Genesis holders are automatically eligible for the
                 FCFS phase. No wallet verification is required.
               </p>
-              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-beak/25 bg-beak/[0.06] px-2.5 py-1 text-[11px] font-semibold text-beak">
+              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-beak/25 bg-beak/[0.06] px-3 py-1.5 text-xs font-semibold text-beak">
                 Your WL spot is secured. 🔥
               </p>
             </section>
 
-            <div className="my-3 h-px bg-paper/[0.07]" />
+            <div className="my-5 h-px bg-paper/[0.07]" />
 
             <section>
-              <div className="flex items-center gap-2">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-brand/25 bg-brand/10 text-brand">
-                  <Sparkles className="size-4" />
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-brand/25 bg-brand/10 text-brand">
+                  <Sparkles className="size-5" />
                 </span>
-                <h2 className="text-base font-semibold text-paper">
+                <h2 className="text-lg font-semibold tracking-[-0.02em] text-paper">
                   Your Journey Doesn&apos;t End Here.
                 </h2>
               </div>
-              <p className="mt-2 text-[12px] leading-5 text-paper-dim">
+              <p className="mt-3 text-sm leading-6 text-paper-dim">
                 Mint your Elyziuma NFT and keep holding. There may be more
                 waiting for you beyond the mint. 👀
               </p>
               <Link
                 href="/launchpad"
-                className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] text-[13px] font-semibold text-paper transition hover:border-brand/40 hover:bg-brand/[0.08]"
+                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] text-sm font-semibold text-paper transition hover:border-brand/40 hover:bg-brand/[0.08]"
               >
                 Open the launchpad
-                <ArrowRight className="size-3" />
+                <ArrowRight className="size-3.5" />
               </Link>
             </section>
           </aside>
         </div>
 
-        <p className="mx-auto mt-3 max-w-5xl text-center font-mono text-[10px] uppercase tracking-[0.16em] text-paper-mute/70">
+        <p className="mx-auto mt-5 max-w-6xl text-center font-mono text-[11px] uppercase tracking-[0.16em] text-paper-mute/70">
           Informational only · The launchpad contract remains the final authority
         </p>
       </section>
