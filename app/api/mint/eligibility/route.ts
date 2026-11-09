@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { isAddress } from "viem";
-import { isCheckerAddress } from "@/lib/checker-access";
 import {
   checkMintEligibility,
   MintCheckerAddressError,
@@ -27,14 +26,6 @@ export async function POST(request: Request) {
   const address =
     typeof body === "object" && body !== null && "address" in body
       ? (body as { address?: unknown }).address
-      : undefined;
-
-  // The checker page is gated to authorized wallets. When it looks up another
-  // address, it sends the connected wallet as `requester`, so arbitrary
-  // lookups are allowed only for visitors who are already inside the gate.
-  const requester =
-    typeof body === "object" && body !== null && "requester" in body
-      ? (body as { requester?: unknown }).requester
       : undefined;
 
   if (
@@ -64,19 +55,6 @@ export async function POST(request: Request) {
           ),
         },
       },
-    );
-  }
-
-  const requesterAddress =
-    typeof requester === "string" ? requester : undefined;
-
-  if (!isCheckerAddress(address) && !isCheckerAddress(requesterAddress)) {
-    return NextResponse.json(
-      {
-        error: "NOT_AUTHORIZED",
-        message: "This wallet does not have access to the checker.",
-      },
-      { status: 403 },
     );
   }
 

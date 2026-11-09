@@ -11,7 +11,6 @@ export type MintEligibilityResponse = {
 export type MintEligibilityErrorCode =
   | "INVALID_BODY"
   | "INVALID_ADDRESS"
-  | "NOT_AUTHORIZED"
   | "RATE_LIMITED"
   | "CHECK_UNAVAILABLE"
   | "CHECK_FAILED";

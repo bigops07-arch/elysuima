@@ -1,9 +1,9 @@
 import { isAddress } from "viem";
 
 /**
- * Wallets allowed into the private pages (`/checker` and `/raffles`). This is
- * public information: it is inlined into the browser bundle so the pages,
- * header, and footer can hide them for every other wallet.
+ * Wallets allowed into the private `/raffles` page. This is public
+ * information: it is inlined into the browser bundle so the page, header, and
+ * footer can hide it for every other wallet.
  *
  * `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` accepts a comma-separated list and, when
  * set, replaces these defaults.
@@ -27,7 +27,7 @@ export const CHECKER_ACCESS_ADDRESSES = parseAccessAddresses(
   process.env.NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS,
 );
 
-export function isCheckerAddress(address?: string | null) {
+export function isAuthorizedAddress(address?: string | null) {
   if (!address || !isAddress(address, { strict: false })) return false;
 
   const normalized = address.toLowerCase();
@@ -35,6 +35,3 @@ export function isCheckerAddress(address?: string | null) {
     (allowed) => allowed.toLowerCase() === normalized,
   );
 }
-
-/** Shared allowlist for every private page. */
-export const isAuthorizedAddress = isCheckerAddress;

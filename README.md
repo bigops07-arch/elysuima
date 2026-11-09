@@ -184,9 +184,9 @@ When `startAt` is set and still in the future, `/launchpad` stays fully visible 
 
 ## Mint checker
 
-`/checker` checks the connected wallet against the GTD and FCFS allowlists. It is read-only: no signature, no gas, and it does not change the launchpad mint flow. GTD wallets see the Guaranteed Mint phase, FCFS wallets see the First Come, First Served phase, and wallets on both lists see Full Mint Access. Wallets on neither list see the not-eligible state, with a note that Kalos Genesis holders are automatically FCFS.
+`/checker` checks any wallet against the GTD and FCFS allowlists. It is read-only: no signature, no gas, and it does not change the launchpad mint flow. The address field is prefilled with the connected wallet when there is one, and visitors can replace it to check any other address. GTD wallets see the Guaranteed Mint phase, FCFS wallets see the First Come, First Served phase, and wallets on both lists see Full Mint Access. Wallets on neither list see the not-eligible state, with a note that Kalos Genesis holders are automatically FCFS.
 
-The page is private. Only wallets in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` (a comma-separated list; defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`, `0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6`, and `0x2f4418dA7b2FB57866D61F735405A75499a1B4bF`) can open it, and the same allowlist unlocks the private `/raffles` page. The checker and raffles links in the header and footer are hidden unless one of those wallets is connected, both pages are `noindex`, and `POST /api/mint/eligibility` returns `403 NOT_AUTHORIZED` for every other address. This is an address-level gate, not a signed session; the allowed addresses are public in the browser bundle.
+The checker is public: anyone can open it and look up any address. Only the private `/raffles` page stays behind `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` (a comma-separated list; defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`, `0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6`, and `0x2f4418dA7b2FB57866D61F735405A75499a1B4bF`), so the raffles link in the header and footer is hidden unless one of those wallets is connected. That gate is address-level, not a signed session; the allowed addresses are public in the browser bundle.
 
 The lists live in Google Sheets and are exposed through a Google Apps Script web app. The Next.js server calls the web app from `POST /api/mint/eligibility`, caches a wallet's result for 60 seconds, and rate-limits callers. The Apps Script needs to accept:
 
@@ -278,7 +278,7 @@ Both are npm-10 compatible: older npm versions ignore the fields and behave as b
 | `NEXT_PUBLIC_LAUNCHPAD_COLLECTION_ADDRESS` | Optional default NFT collection. The owner console manages the same collection |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud project ID; injected wallets work without it |
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata and OG images |
-| `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` | Comma-separated wallets allowed into the private `/checker` and `/raffles` pages. Defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`, `0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6`, and `0x2f4418dA7b2FB57866D61F735405A75499a1B4bF` |
+| `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS` | Comma-separated wallets allowed into the private `/raffles` page. Defaults to `0xa4575566BF5386CB5ba48EdcBeA71235bD94fE4d`, `0xb181FDFe71A0a0f56574D88f22B6BaFD142192F6`, and `0x2f4418dA7b2FB57866D61F735405A75499a1B4bF` |
 
 ### Server variables
 
@@ -425,7 +425,7 @@ Success response:
 }
 ```
 
-`tier` is `gtd`, `fcfs`, `both`, or `none`. The route calls the configured Google Apps Script web app, caches the result for 60 seconds, and rate-limits by IP. It only accepts wallets in `NEXT_PUBLIC_CHECKER_ACCESS_ADDRESS`; every other address receives `403 NOT_AUTHORIZED`. Other errors include `INVALID_BODY`, `INVALID_ADDRESS`, `RATE_LIMITED`, `CHECK_UNAVAILABLE`, and `CHECK_FAILED`.
+`tier` is `gtd`, `fcfs`, `both`, or `none`. The route calls the configured Google Apps Script web app, caches the result for 60 seconds, and rate-limits by IP. It is public, so it accepts any valid EVM address. Other errors include `INVALID_BODY`, `INVALID_ADDRESS`, `RATE_LIMITED`, `CHECK_UNAVAILABLE`, and `CHECK_FAILED`.
 
 ### `POST /api/claim/eligibility`
 

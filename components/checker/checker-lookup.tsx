@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { isAddress, type Address } from "viem";
 import { useAccount } from "wagmi";
 import {
@@ -23,7 +23,25 @@ export function CheckerAddressLookup() {
   const [input, setInput] = useState("");
   const [checked, setChecked] = useState<Address | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const query = useMintEligibility(checked ?? undefined, connectedAddress);
+  const query = useMintEligibility(checked ?? undefined);
+
+  // Seed the field with the connected wallet once it reconnects, but never
+  // overwrite an address the visitor typed in themselves.
+  const prefilledAddress = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!connectedAddress) return;
+
+    const previous = prefilledAddress.current?.toLowerCase();
+
+    setInput((current) => {
+      const normalized = current.trim().toLowerCase();
+      if (!normalized || normalized === previous) return connectedAddress;
+      return current;
+    });
+
+    prefilledAddress.current = connectedAddress;
+  }, [connectedAddress]);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,12 +69,6 @@ export function CheckerAddressLookup() {
     setError(null);
   };
 
-  const useConnected = () => {
-    if (!connectedAddress) return;
-    setInput(connectedAddress);
-    setError(null);
-  };
-
   return (
     <div>
       <div className="flex items-start gap-3">
@@ -65,11 +77,11 @@ export function CheckerAddressLookup() {
         </span>
         <div>
           <h3 className="text-lg font-semibold tracking-[-0.02em] text-paper">
-            Check another wallet
+            Check a wallet
           </h3>
           <p className="mt-1 max-w-lg text-sm leading-6 text-paper-dim">
-            Paste any EVM address to read its GTD and FCFS access. Your
-            connected wallet stays checked in the other tab.
+            Enter any EVM address to read its GTD and FCFS access. Nothing is
+            signed and no gas is spent.
           </p>
         </div>
       </div>
@@ -145,15 +157,6 @@ export function CheckerAddressLookup() {
             <ShieldCheck className="size-3 text-brand" />
             Read-only · No signature · No gas
           </p>
-          {connectedAddress ? (
-            <button
-              type="button"
-              onClick={useConnected}
-              className="font-mono text-[10px] uppercase tracking-[0.14em] text-paper-mute transition hover:text-brand"
-            >
-              Use connected wallet
-            </button>
-          ) : null}
         </div>
 
         {error ? (
@@ -202,8 +205,8 @@ function LookupEmpty() {
         <Wallet className="size-4" />
       </span>
       <p className="text-sm leading-6 text-paper-mute">
-        Paste any wallet address above to see which mint phases it qualifies
-        for.
+        Enter a wallet address and hit Check wallet to see which mint phases it
+        qualifies for.
       </p>
     </div>
   );

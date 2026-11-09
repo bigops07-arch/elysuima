@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Flame, Sparkles } from "lucide-react";
+import { Flame } from "lucide-react";
 import { CheckerPanel } from "./checker-panel";
 
 export function CheckerContent() {
@@ -39,7 +39,7 @@ export function CheckerContent() {
               </h1>
 
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-paper-dim">
-                Connect the wallet you plan to mint with. We read the GTD and
+                Enter the wallet you plan to mint with. We read the GTD and
                 FCFS lists — no signature, no gas.
               </p>
             </div>
@@ -65,7 +65,7 @@ export function CheckerContent() {
         <div className="mx-auto grid max-w-6xl items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-5">
           <CheckerPanel />
 
-          <aside className="glass flex flex-col justify-between rounded-[28px] p-5 sm:p-6">
+          <aside className="glass flex flex-col justify-center rounded-[28px] p-5 sm:p-6">
             <section>
               <div className="flex items-center gap-3">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-beak/30 bg-beak/10 text-beak">
@@ -81,23 +81,6 @@ export function CheckerContent() {
               </p>
               <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-beak/25 bg-beak/[0.06] px-3 py-1.5 text-xs font-semibold text-beak">
                 Your WL spot is secured. 🔥
-              </p>
-            </section>
-
-            <div className="my-5 h-px bg-paper/[0.07]" />
-
-            <section>
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-brand/25 bg-brand/10 text-brand">
-                  <Sparkles className="size-5" />
-                </span>
-                <h2 className="text-lg font-semibold tracking-[-0.02em] text-paper">
-                  Your Journey Doesn&apos;t End Here.
-                </h2>
-              </div>
-              <p className="mt-3 text-pretty text-sm leading-6 text-paper-dim">
-                Mint your Elyziuma NFT and keep holding. There may be more
-                waiting for you beyond the mint. 👀
               </p>
             </section>
           </aside>

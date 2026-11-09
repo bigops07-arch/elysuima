@@ -41,14 +41,10 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
   const showPrivatePages = isAuthorizedAddress(address);
   const productLinks = showPrivatePages
     ? PRODUCT
-    : PRODUCT.filter(
-        (link) => link.href !== "/checker" && link.href !== "/raffles",
-      );
+    : PRODUCT.filter((link) => link.href !== "/raffles");
   const compactLinks = showPrivatePages
     ? COMPACT_LINKS
-    : COMPACT_LINKS.filter(
-        (link) => link.href !== "/checker" && link.href !== "/raffles",
-      );
+    : COMPACT_LINKS.filter((link) => link.href !== "/raffles");
 
   if (compact) {
     return (

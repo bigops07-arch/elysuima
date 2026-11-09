@@ -29,9 +29,7 @@ export function SiteHeader() {
   const showPrivatePages = isAuthorizedAddress(address);
   const navItems = showPrivatePages
     ? NAV
-    : NAV.filter(
-        (item) => item.href !== "/checker" && item.href !== "/raffles",
-      );
+    : NAV.filter((item) => item.href !== "/raffles");
 
   return (
     <header className="sticky top-0 z-50 border-b border-paper/[0.07] bg-ink/70 backdrop-blur-xl">
